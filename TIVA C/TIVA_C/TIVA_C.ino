@@ -79,7 +79,7 @@ int datoNum =0;
 
 //Dato sensor
 String dato=""; 
-String text1 = "Sensor de proximidad";
+String text1 = "Sensor de HR y SPO2";
 String prueba1="";
 
 bool comunicacion = false; 
@@ -94,8 +94,7 @@ File myFile;//este tipo de función me permite guardar datos en un archivo con e
 //----------------------------------------------------------------------------------------------------------------------
 void setup() {
   Serial.begin(115200);//iniciailzamos la comunicación
-  Serial4.begin(115200);
-  Serial3.begin(115200);
+  Serial4.begin(115200);//Comunicación Serial con el SP32
 
 
   pinMode(Boton1, INPUT_PULLUP);
