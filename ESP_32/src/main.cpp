@@ -17,6 +17,8 @@
 #include "MAX30105.h"
 #include "spo2_algorithm.h"
 
+MAX30105 particleSensor;
+
 
 //----------------------------------------------------------------------------------------------------------------------
 //Definición de pines
@@ -31,6 +33,16 @@ void sensorMAX30105(void);
 //---------------------------------------------------------------------------------------------------------------------
 //Variables Globales
 //----------------------------------------------------------------------------------------------------------------------
+#if defined(__AVR_ATmega328P__) || defined(__AVR_ATmega168__)
+//Arduino Uno doesn't have enough SRAM to store 100 samples of IR led data and red led data in 32-bit format
+//To solve this problem, 16-bit MSB of the sampled data will be truncated. Samples become 16-bit data.
+uint16_t irBuffer[100]; //infrared LED sensor data
+uint16_t redBuffer[100];  //red LED sensor data
+#else
+uint32_t irBuffer[100]; //infrared LED sensor data
+uint32_t redBuffer[100];  //red LED sensor data
+#endif
+
 int32_t bufferLength; //Tamaño del dato
 int32_t spo2; //Valor SPO2
 int8_t validSPO2; //Indicador para ver si el valor del SPO2 es valido
@@ -133,30 +145,30 @@ void sensorMAX30105(void){
       //Mira si el sensor tiene nuevos datos
         particleSensor.check(); 
 
-        digitalWrite(readLED, !digitalRead(readLED)); //Parpadea con la led cada que ingresa nuevos datos
+      digitalWrite(readLED, !digitalRead(readLED)); //Parpadea con la led cada que ingresa nuevos datos
 
-        redBuffer[i] = particleSensor.getRed();
-        irBuffer[i] = particleSensor.getIR();
-        particleSensor.nextSample(); //Se termina con esta muestra y se mueve a la siguiente
+      redBuffer[i] = particleSensor.getRed();
+      irBuffer[i] = particleSensor.getIR();
+      particleSensor.nextSample(); //Se termina con esta muestra y se mueve a la siguiente
 
          //Se envian las muestras y los calculos al monitor
-        Serial.print(F("red="));
-        Serial.print(redBuffer[i], DEC);
-        Serial.print(F(", ir="));
-        Serial.print(irBuffer[i], DEC);
+      Serial.print(F("red="));
+      Serial.print(redBuffer[i], DEC);
+      Serial.print(F(", ir="));
+      Serial.print(irBuffer[i], DEC);
 
-        Serial.print(F(", HR="));
-        Serial.print(heartRate, DEC);
+      Serial.print(F(", HR="));
+      Serial.print(heartRate, DEC);
 
-        Serial.print(F(", HRvalid="));
-        Serial.print(validHeartRate, DEC);
+      Serial.print(F(", HRvalid="));
+      Serial.print(validHeartRate, DEC);
 
-        Serial.print(F(", SPO2="));
-        Serial.print(spo2, DEC);
+      Serial.print(F(", SPO2="));
+      Serial.print(spo2, DEC);
 
-        Serial.print(F(", SPO2Valid="));
-        Serial.println(validSPO2, DEC);
-      }
+      Serial.print(F(", SPO2Valid="));
+      Serial.println(validSPO2, DEC);
+     }
 
       //Después de tomar 25 muestras se recalculan los datos del ritmo cardíaco y el SPO2
       maxim_heart_rate_and_oxygen_saturation(irBuffer, bufferLength, redBuffer, &spo2, &validSPO2, &heartRate, &validHeartRate);
