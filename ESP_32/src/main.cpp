@@ -83,7 +83,76 @@ void setup() {
 //Loop principal
 //---------------------------------------------------------------------------------------------------------------------
 void loop() {
-  
+   //Tamaño del buffer de 100 para que durante 4 segundos almacene las muestres a 25sps
+   bufferLength = 100; 
+
+   //lee las primeras 100 muestras y determina el rango de la señal
+  for (byte i = 0 ; i < bufferLength ; i++){
+
+  //Se tienen nuevos datos?
+  while (particleSensor.available() == false)
+  //Mira si el sensor tiene nuevos datos  
+      particleSensor.check(); 
+
+  redBuffer[i] = particleSensor.getRed();
+  irBuffer[i] = particleSensor.getIR();
+  particleSensor.nextSample(); //Se acabo con estra muestra y se pasa a la siguiente
+
+  Serial.print(F("red="));
+  Serial.print(redBuffer[i], DEC);
+  Serial.print(F(", ir="));
+  Serial.println(irBuffer[i], DEC);
+
+  }
+  //Calcula el nivel SPO2 y el Ritmo cardíaco después de 100 muestras (los primeros 4 segundos de muestras)
+  maxim_heart_rate_and_oxygen_saturation(irBuffer, bufferLength, redBuffer, &spo2, &validSPO2, &heartRate, &validHeartRate);
+
+   //se estan tomando las medidas constantemente y se calculan cada segundo
+  while (1){
+    //Se colocan las primeras 25 muestras en la memoria y las 75 siguientes en la cima. 
+    for (byte i = 25; i < 100; i++)
+    {
+      redBuffer[i - 25] = redBuffer[i];
+      irBuffer[i - 25] = irBuffer[i];
+    }
+
+    //toma 25 muestras antes de calcular el pulso cardíaco. 
+    for (byte i = 75; i < 100; i++)
+    {
+      //Se tienen nuevos datos? 
+      while (particleSensor.available() == false) 
+      //Mira si el sensor tiene nuevos datos
+        particleSensor.check(); 
+
+        digitalWrite(readLED, !digitalRead(readLED)); //Parpadea con la led cada que ingresa nuevos datos
+
+        redBuffer[i] = particleSensor.getRed();
+        irBuffer[i] = particleSensor.getIR();
+        particleSensor.nextSample(); //Se termina con esta muestra y se mueve a la siguiente
+
+         //Se envian las muestras y los calculos al monitor
+        Serial.print(F("red="));
+        Serial.print(redBuffer[i], DEC);
+        Serial.print(F(", ir="));
+        Serial.print(irBuffer[i], DEC);
+
+        Serial.print(F(", HR="));
+        Serial.print(heartRate, DEC);
+
+        Serial.print(F(", HRvalid="));
+        Serial.print(validHeartRate, DEC);
+
+        Serial.print(F(", SPO2="));
+        Serial.print(spo2, DEC);
+
+        Serial.print(F(", SPO2Valid="));
+        Serial.println(validSPO2, DEC);
+      }
+
+      //Después de tomar 25 muestras se recalculan los datos del ritmo cardíaco y el SPO2
+      maxim_heart_rate_and_oxygen_saturation(irBuffer, bufferLength, redBuffer, &spo2, &validSPO2, &heartRate, &validHeartRate);
+    }
+
 }
 
 //Funciones para Neopixel
