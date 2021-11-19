@@ -79,7 +79,8 @@ int datoNum =0;
 
 //Dato sensor
 String dato=""; 
-String text1 = "Sensor de HR y SPO2";
+String text1 = "HR=";
+String text2 = "SPO2=";
 String prueba1="";
 
 bool comunicacion = false; 
@@ -128,8 +129,9 @@ void loop()
 {
   
   
-  LCD_Print(text1 ,110, 110, 1, 0x0000,   0xFFFF);
-  LCD_Print(dato ,110, 120, 1, 0x0000,   0xFFFF);
+  LCD_Print(text1 ,130, 110, 1, 0x0000,   0xFFFF);
+  LCD_Print(text2 ,200, 110, 1, 0x0000,   0xFFFF);
+  LCD_Print(dato ,140, 110, 1, 0x0000,   0xFFFF);
 
   sensorHR();   
   guardarDatoSD(); 
