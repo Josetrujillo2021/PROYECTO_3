@@ -12,11 +12,17 @@
 //librerías de NEOPIXEL
 #include <Adafruit_NeoPixel.h>
 
+//Librerías para MAX30105
+#include <Wire.h>
+#include "MAX30105.h"
+#include "spo2_algorithm.h"
+
 
 //----------------------------------------------------------------------------------------------------------------------
 //Definición de pines
 //----------------------------------------------------------------------------------------------------------------------
 #define PIN 13
+#define MAX_BRIGHTNESS 255
 //----------------------------------------------------------------------------------------------------------------------
 //Prototipos de funciones
 //----------------------------------------------------------------------------------------------------------------------
@@ -24,6 +30,14 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(16, PIN, NEO_GRB + NEO_KHZ800);
 //---------------------------------------------------------------------------------------------------------------------
 //Variables Globales
 //----------------------------------------------------------------------------------------------------------------------
+int32_t bufferLength; //Tamaño del dato
+int32_t spo2; //Valor SPO2
+int8_t validSPO2; //Indicador para ver si el valor del SPO2 es valido
+int32_t heartRate; //valor del Ritmo Cardíaco 
+int8_t validHeartRate; //Indicador para ver si el valor del Ritmo cardíaco es valido
+
+byte pulseLED = 11; //debe estar en un pin PWM
+byte readLED = 13; //Parpadea con cada medición de dato
 
 //----------------------------------------------------------------------------------------------------------------------
 //ISR  (interrupciones)
@@ -34,7 +48,31 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(16, PIN, NEO_GRB + NEO_KHZ800);
 //CONFIGURACIÓN
 //----------------------------------------------------------------------------------------------------------------------
 void setup() {
-  
+  Serial.begin(115200); // initialize serial communication at 115200 bits per second:
+  //Configuración MAX30105
+  pinMode(pulseLED, OUTPUT);
+  pinMode(readLED, OUTPUT);
+
+  // Initialización para MAX30105
+  if (!particleSensor.begin(Wire, I2C_SPEED_FAST)) //Usa el I2C default, velocidad de 400kHz 
+  {
+    Serial.println(F("No se encontró sensor MAX30105, Chekear conexión"));
+    while (1);
+  }
+
+  Serial.println(F("coloque el dedo en sensor e ingrese cualquier dato al monitor"));
+  while (Serial.available() == 0) ; //espera a que el usuario ingrese cualquier letra al monitor
+  Serial.read();
+
+  byte ledBrightness = 60; //Configuración: 0=Off a 255=50mA
+  byte sampleAverage = 4; //Configuración: 1, 2, 4, 8, 16, 32
+  byte ledMode = 2; //Configuración: 1 = Red only, 2 = Red + IR, 3 = Red + IR + Green
+  byte sampleRate = 100; //Configuración: 50, 100, 200, 400, 800, 1000, 1600, 3200
+  int pulseWidth = 411; //Configuración: 69, 118, 215, 411
+  int adcRange = 4096; //Configuración: 2048, 4096, 8192, 16384
+  //Configuración del sensor MAX30105
+   particleSensor.setup(ledBrightness, sampleAverage, ledMode, sampleRate, pulseWidth, adcRange);
+
   //Inicialización de NEOPIXEL
   strip.begin();
   strip.setBrightness(50);
