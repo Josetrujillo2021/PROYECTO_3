@@ -96,8 +96,8 @@ void setup() {
 //Loop principal
 //---------------------------------------------------------------------------------------------------------------------
 void loop() {
-  rainbow(20);
-  theaterChaseRainbow(50);
+  //rainbow(20);
+  //theaterChaseRainbow(50);
   sensorMAX30105();
   
 }
@@ -152,7 +152,9 @@ void sensorMAX30105(void){
       irBuffer[i] = particleSensor.getIR();
       particleSensor.nextSample(); //Se termina con esta muestra y se mueve a la siguiente
 
-         //Se envian las muestras y los calculos al monitor
+     if (Serial.read()=='D'){
+      //Se envian las muestras y los calculos al monitor
+     
       Serial.print(F("red="));
       Serial.print(redBuffer[i], DEC);
       Serial.print(F(", ir="));
@@ -169,6 +171,7 @@ void sensorMAX30105(void){
 
       Serial.print(F(", SPO2Valid="));
       Serial.println(validSPO2, DEC);
+      }
      }
 
       //Después de tomar 25 muestras se recalculan los datos del ritmo cardíaco y el SPO2
