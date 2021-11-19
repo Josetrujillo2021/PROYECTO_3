@@ -38,13 +38,6 @@
 #define Boton1 PF_0 
 #define Boton2 PF_4
 
-
-//notas 
-#define NOTE_F7  2794
-#define NOTE_F6  1397
-#define NOTE_B0  31
-#define NOTE_A7  3520
-
 //Pines para TFT 
 #define LCD_RST PD_0
 #define LCD_CS PD_1
@@ -55,9 +48,8 @@ int DPINS[] = {PB_0, PB_1, PB_2, PB_3, PB_4, PB_5, PB_6, PB_7};
 //----------------------------------------------------------------------------------------------------------------------
 //Prototipos de funciones
 //----------------------------------------------------------------------------------------------------------------------
-void sensorProximidad(void);
+void sensorHR(void);
 void guardarDatoSD(void);
-void lecturaDatos(void);
 
 
 //funciones para TFT
@@ -173,14 +165,14 @@ void loop()
  /* Serial4.println("Esto es una prueba");
   prueba1 =Serial4.readStringUntil('\n');
   Serial.println(prueba1);*/
-  sensorProximidad();   
+  sensorHR();   
   guardarDatoSD(); 
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 //Sensor proximidad
 //---------------------------------------------------------------------------------------------------------------------
-void sensorProximidad(void){
+void sensorHR(void){
   //Enviamos serialmente el valor de la distancia
   if (digitalRead(Boton1)==0){
       comunicacion = true; 
