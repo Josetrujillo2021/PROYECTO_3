@@ -74,24 +74,6 @@ void LCD_Sprite(int x, int y, int width, int height, unsigned char bitmap[], int
 //Variable para TFT 
 extern uint8_t fondo[];
 
-//DELAY 1 = 10 microsegundos
-long LastTime1;
-long sampleTime1 =15; 
-
-//DELAY 2 = 15 milisegundos
-long LastTime2; 
-long sampleTime2 = 15;
-
- 
-//DELAY 3 = 15 milisegundos
-long LastTime3; 
-long sampleTime3 = 15; 
-
-
-//DELAY 4 = 15 milisegundos
-long LastTime4; 
-long sampleTime4 = 15; 
-
 //dato numerico
 int datoNum =0;
 
@@ -114,22 +96,13 @@ void setup() {
   Serial.begin(115200);//iniciailzamos la comunicación
   Serial4.begin(115200);
   Serial3.begin(115200);
-  /*pinMode(Trigger, OUTPUT); //pin como salida
-  pinMode(Echo, INPUT);  //pin como entrada*/
+
 
   pinMode(Boton1, INPUT_PULLUP);
   pinMode(Boton2, INPUT_PULLUP);
 
-  
-  //digitalWrite(Trigger, LOW);//Inicializamos el pin con 0
 
-  //tiempos
-  LastTime1=millis(); 
-  LastTime2=millis();
-  LastTime3=millis();
-  LastTime4=millis(); 
-
-  SPI.setModule(0);//se define el modulo del SPI en el canal 0 de 3
+   SPI.setModule(0);//se define el modulo del SPI en el canal 0 de 3
 
   // se tendra los comandos base para que fincione la comunicacion con la SD
   if (!SD.begin(PA_3)) {
@@ -159,12 +132,6 @@ void loop()
   LCD_Print(text1 ,110, 110, 1, 0x0000,   0xFFFF);
   LCD_Print(dato ,110, 120, 1, 0x0000,   0xFFFF);
 
-  //con este dato númerico puedo hacer que mi progra muestre el sprite que quiero dependiendo del valor del sensor. 
-  
-  //spriteProximidad(); 
- /* Serial4.println("Esto es una prueba");
-  prueba1 =Serial4.readStringUntil('\n');
-  Serial.println(prueba1);*/
   sensorHR();   
   guardarDatoSD(); 
 }
@@ -175,7 +142,7 @@ void loop()
 void sensorHR(void){
   //Enviamos serialmente el valor de la distancia
   if (digitalRead(Boton1)==0){
-      comunicacion = true; 
+    comunicacion = true; 
 
     delay(10);
     if(digitalRead(Boton1)==1){
@@ -215,13 +182,13 @@ void guardarDatoSD(void){
 //***************************************************************************************************************************************
 void writeSD(void) {
 
-  myFile = SD.open("datos.csv", FILE_WRITE);//abrira una carpeta en formato excel o hoja de calculo 
+  myFile = SD.open("pr3.csv", FILE_WRITE);//abrira una carpeta en formato excel o hoja de calculo 
 
   //si el archivo abrió correctamente entra al if
   if (myFile) {
     Serial.println("Escribiendo datos");
 
-    Serial.print("Proximidad: ");
+    Serial.print("HR y SPO2: ");
     Serial.print(dato);//sobreescribe sobre el dato que guardo en el ultimo momento del sensor 
 
 
@@ -238,11 +205,6 @@ void writeSD(void) {
     // Si no abrió correctamente el archivo
     Serial.println("error opening data.csv");
   }
-  /*for (int x = 0; x < 320 - 32; x++) {//uncion de animacion ya que se tien varias columnas reproducria cara una proporcionando un efecto de movimiento 
-    int anim2 = (x / 35) % 3;
-    LCD_Sprite(60, 100, 50, 50, pesaSprite, 3, anim2, 0, 1);
-    delay(15);
-  }*/
 }
 
 
