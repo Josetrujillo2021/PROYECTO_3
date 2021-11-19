@@ -27,6 +27,7 @@
 //Prototipos de funciones
 //----------------------------------------------------------------------------------------------------------------------
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(16, PIN, NEO_GRB + NEO_KHZ800);
+void sensorMAX30105(void);
 //---------------------------------------------------------------------------------------------------------------------
 //Variables Globales
 //----------------------------------------------------------------------------------------------------------------------
@@ -83,7 +84,14 @@ void setup() {
 //Loop principal
 //---------------------------------------------------------------------------------------------------------------------
 void loop() {
-   //Tamaño del buffer de 100 para que durante 4 segundos almacene las muestres a 25sps
+  
+  sensorMAX30105();
+}
+//---------------------------------------------------------------------------------------------------------------------
+//Lectura de datos Sensor MAX30105
+//---------------------------------------------------------------------------------------------------------------------
+void sensorMAX30105(void){
+  //Tamaño del buffer de 100 para que durante 4 segundos almacene las muestres a 25sps
    bufferLength = 100; 
 
    //lee las primeras 100 muestras y determina el rango de la señal
@@ -152,10 +160,10 @@ void loop() {
       //Después de tomar 25 muestras se recalculan los datos del ritmo cardíaco y el SPO2
       maxim_heart_rate_and_oxygen_saturation(irBuffer, bufferLength, redBuffer, &spo2, &validSPO2, &heartRate, &validHeartRate);
     }
-
 }
-
+//---------------------------------------------------------------------------------------------------------------------
 //Funciones para Neopixel
+//---------------------------------------------------------------------------------------------------------------------
 // Secuencia de leds 1 encedido otro apagado de 1 en 1 de un solo color
 void colorWipe(uint32_t c, uint8_t wait) {
   for(uint16_t i=0; i<strip.numPixels(); i++) {
