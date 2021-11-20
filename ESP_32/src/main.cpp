@@ -53,6 +53,8 @@ byte pulseLED = 11; //debe estar en un pin PWM
 byte readLED = 13; //Parpadea con cada medición de dato
 
 String dato ="";
+String  HR = ""; 
+String  SPO2="";
 
 //----------------------------------------------------------------------------------------------------------------------
 //ISR  (interrupciones)
@@ -163,8 +165,12 @@ void sensorMAX30105(void){
       //Se envian las muestras y los calculos al monitor
 
       dato=Serial2.readStringUntil('\n');
-      Serial.println(dato);
-
+      //Serial.println(dato);
+      HR = getValue(dato, ",", 0);
+      Serial.print(HR);
+      Serial.print(" ");
+      SPO2 = getValue(dato, ",", 1);
+      Serial.println(SPO2);
       /*Serial.print(F("red="));
       Serial.print(redBuffer[i], DEC);
       Serial.print(F(", ir="));
