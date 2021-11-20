@@ -52,6 +52,8 @@ int8_t validHeartRate; //Indicador para ver si el valor del Ritmo cardíaco es v
 byte pulseLED = 11; //debe estar en un pin PWM
 byte readLED = 13; //Parpadea con cada medición de dato
 
+String dato ="";
+
 //----------------------------------------------------------------------------------------------------------------------
 //ISR  (interrupciones)
 //----------------------------------------------------------------------------------------------------------------------
@@ -62,6 +64,7 @@ byte readLED = 13; //Parpadea con cada medición de dato
 //----------------------------------------------------------------------------------------------------------------------
 void setup() {
   Serial.begin(115200); // initialize serial communication at 115200 bits per second:
+  Serial2.begin(115200);
   //Configuración MAX30105
   pinMode(pulseLED, OUTPUT);
   pinMode(readLED, OUTPUT);
@@ -152,10 +155,17 @@ void sensorMAX30105(void){
       irBuffer[i] = particleSensor.getIR();
       particleSensor.nextSample(); //Se termina con esta muestra y se mueve a la siguiente
 
-     if (Serial.read()=='D'){
+      Serial2.print(heartRate, DEC);
+      Serial2.print(",");
+      Serial2.println(spo2,DEC);
+
+     if (Serial2.available()>0){
       //Se envian las muestras y los calculos al monitor
-     
-      Serial.print(F("red="));
+
+      dato=Serial2.readStringUntil('\n');
+      Serial.println(dato);
+
+      /*Serial.print(F("red="));
       Serial.print(redBuffer[i], DEC);
       Serial.print(F(", ir="));
       Serial.print(irBuffer[i], DEC);
@@ -170,7 +180,7 @@ void sensorMAX30105(void){
       Serial.print(spo2, DEC);
 
       Serial.print(F(", SPO2Valid="));
-      Serial.println(validSPO2, DEC);
+      Serial.println(validSPO2, DEC);*/
       }
      }
 
