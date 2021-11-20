@@ -56,14 +56,6 @@ byte readLED = 13; //Parpadea con cada medición de dato
 String dato ="";
 String  HR = ""; 
 String  SPO2="";
-
-//Variables prueba 1
-char  *strtok(char *str1,  const char *str2);
-char *resultado = NULL; 
-char str[100];
-String cadena;
-char c; 
-
 Separador s; 
 //----------------------------------------------------------------------------------------------------------------------
 //ISR  (interrupciones)
@@ -172,54 +164,15 @@ void sensorMAX30105(void){
 
      if (Serial2.available()>0){
       //Se envian las muestras y los calculos al monitor
-      
+      //Lee el dato hasta que hay un enter
       dato = Serial2.readStringUntil('\n');
+      //Separa el primer dato del primer indicador, en este caso la ',' y el primer dato se indica con el 0
       HR = s.separa(dato, ',',0);
+      //Separa el segundo dato con el indicador ',' en este caso se indica con el 1
       SPO2 = s.separa(dato,',',1);
+      //Se imprimern los datos obtenidos de la lectura.
       Serial.println("Heart rate= "+HR);
       Serial.println("Oximetría= "+SPO2);
-
-      /*c = Serial2.read();
-      cadena += c;
-      if (c == '\n'){
-        Serial.println(cadena);//ESTE ME IMPRIME LA CADENA COMPLETA
-        cadena.toCharArray(str, 101); //SIEMPRE DEBE DE SER MAYOR AL NUMERO DE CARACTERES QUE ENVÍO
-        char delimitadores[] =","; //DELIMITADORES
-        char *resultado = NULL; 
-        resultado = strtok(str,delimitadores);//ME GUARDA LOS DATOS EN LA VARIABLE CHAR
-        while(resultado != NULL){
-          Serial.println(resultado);//ME VA MOSTRADO CADA UNO DE LOS DATOS DE RESULTADO
-          resultado = strtok(NULL, delimitadores);//
-        }
-        cadena = "";
-      }*/
-
-
-      /*dato=Serial2.readStringUntil('\n');
-      //Serial.println(dato);
-      HR = getValue(dato, ",", 0);
-      Serial.print(HR);
-      Serial.print(" ");
-      SPO2 = getValue(dato, ",", 1);
-      Serial.println(SPO2);*/
-
-
-      /*Serial.print(F("red="));
-      Serial.print(redBuffer[i], DEC);
-      Serial.print(F(", ir="));
-      Serial.print(irBuffer[i], DEC);
-
-      Serial.print(F(", HR="));
-      Serial.print(heartRate, DEC);
-
-      Serial.print(F(", HRvalid="));
-      Serial.print(validHeartRate, DEC);
-
-      Serial.print(F(", SPO2="));
-      Serial.print(spo2, DEC);
-
-      Serial.print(F(", SPO2Valid="));
-      Serial.println(validSPO2, DEC);*/
       }
      }
 
