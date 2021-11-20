@@ -184,6 +184,7 @@ void guardarDatoSD(void){
         writeSD();  
         subirDato = false; 
         Serial.println("Se guardaron los datos en la memoria SD"); 
+        Serial4.println("guardando");
       }
        
       
