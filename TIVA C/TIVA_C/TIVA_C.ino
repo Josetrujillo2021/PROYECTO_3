@@ -136,8 +136,8 @@ void loop()
   
   LCD_Print(text1 ,130, 110, 1, 0x0000,   0xFFFF);
   LCD_Print(text2 ,200, 110, 1, 0x0000,   0xFFFF);
-  LCD_Print(HR ,140, 110, 1, 0x0000,   0xFFFF);
-  LCD_Print(SPO2 ,210, 110, 1, 0x0000,   0xFFFF);
+  LCD_Print(HR ,160, 110, 1, 0x0000,   0xFFFF);
+  LCD_Print(SPO2 ,240, 110, 1, 0x0000,   0xFFFF);
 
   sensorHR();   
   guardarDatoSD(); 
@@ -154,12 +154,17 @@ void sensorHR(void){
     delay(10);
     if(digitalRead(Boton1)==1){
       if(comunicacion){
+        //Prueba
+        Serial4.println("150, 98");
         if (Serial4.available()>0){
+          //Obtención de los dos datos
           dato = Serial4.readStringUntil('\n');
+          //Separación de los datos
           HR = s.separa(dato, ',', 0);
           SPO2 = s.separa(dato, ',', 1);
         }
         Serial4.println(dato);
+        Serial.println(dato);
         comunicacion = false; 
       }
    }
