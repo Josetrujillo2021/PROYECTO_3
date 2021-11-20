@@ -56,6 +56,12 @@ String dato ="";
 String  HR = ""; 
 String  SPO2="";
 
+//Variables prueba 1
+char  *strtok(char *str1,  const char *str2);
+char *resultado = NULL; 
+char str[2];
+String cadena;
+char c; 
 //----------------------------------------------------------------------------------------------------------------------
 //ISR  (interrupciones)
 //----------------------------------------------------------------------------------------------------------------------
@@ -163,14 +169,30 @@ void sensorMAX30105(void){
 
      if (Serial2.available()>0){
       //Se envian las muestras y los calculos al monitor
-
-      dato=Serial2.readStringUntil('\n');
+      
+      c = Serial2.read();
+      cadena += c
+      if (c == '\n'){
+        Serial.println(cadena);//ESTE ME IMPRIME LA CADENA COMPLETA
+        cadena.toCharArray(str, 3); //SIEMPRE DEBE DE SER MAYOR AL NUMERO DE CARACTERES QUE ENVÍO
+        char delimitadores[] =","; //DELIMITADORES
+        char *resultado = NULL; 
+        resultado = strtok(str,delimitadores);//ME GUARDA LOS DATOS EN LA VARIABLE CHAR
+        while(resultado != NULL){
+          Serial.print(resultado);//ME VA MOSTRADO CADA UNO DE LOS DATOS DE RESULTADO
+          resultado = strtok(NULL, delimitadores);//
+        }
+        cadena = "",
+      }
+      /*dato=Serial2.readStringUntil('\n');
       //Serial.println(dato);
       HR = getValue(dato, ",", 0);
       Serial.print(HR);
       Serial.print(" ");
       SPO2 = getValue(dato, ",", 1);
-      Serial.println(SPO2);
+      Serial.println(SPO2);*/
+
+
       /*Serial.print(F("red="));
       Serial.print(redBuffer[i], DEC);
       Serial.print(F(", ir="));
