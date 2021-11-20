@@ -59,7 +59,7 @@ String  SPO2="";
 //Variables prueba 1
 char  *strtok(char *str1,  const char *str2);
 char *resultado = NULL; 
-char str[2];
+char str[100];
 String cadena;
 char c; 
 //----------------------------------------------------------------------------------------------------------------------
@@ -174,12 +174,12 @@ void sensorMAX30105(void){
       cadena += c;
       if (c == '\n'){
         Serial.println(cadena);//ESTE ME IMPRIME LA CADENA COMPLETA
-        cadena.toCharArray(str, 3); //SIEMPRE DEBE DE SER MAYOR AL NUMERO DE CARACTERES QUE ENVÍO
+        cadena.toCharArray(str, 101); //SIEMPRE DEBE DE SER MAYOR AL NUMERO DE CARACTERES QUE ENVÍO
         char delimitadores[] =","; //DELIMITADORES
         char *resultado = NULL; 
         resultado = strtok(str,delimitadores);//ME GUARDA LOS DATOS EN LA VARIABLE CHAR
         while(resultado != NULL){
-          Serial.print(resultado);//ME VA MOSTRADO CADA UNO DE LOS DATOS DE RESULTADO
+          Serial.println(resultado);//ME VA MOSTRADO CADA UNO DE LOS DATOS DE RESULTADO
           resultado = strtok(NULL, delimitadores);//
         }
         cadena = "";
