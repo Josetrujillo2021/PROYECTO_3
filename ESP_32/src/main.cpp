@@ -102,8 +102,9 @@ void setup() {
 //Loop principal
 //---------------------------------------------------------------------------------------------------------------------
 void loop() {
-  rainbow(20);
-  //theaterChaseRainbow(50);
+  colorWipe(255,20);
+  
+  
   sensorMAX30105();
   if(Serial2.read()=='guardando'){
     rainbow(20);
@@ -166,6 +167,7 @@ void sensorMAX30105(void){
       Serial2.println(spo2,DEC);
 
      if (Serial2.available()>0){
+      rainbowCycle(2);
       //Se envian las muestras y los calculos al monitor
       //Lee el dato hasta que hay un enter
       dato = Serial2.readStringUntil('\n');
@@ -211,7 +213,7 @@ void rainbow(uint8_t wait) {
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
 
-  for(j=0; j<256*5; j++) { // 5 ciclos de todos los colores en la rueda
+  for(j=0; j<256*2; j++) { // 5 ciclos de todos los colores en la rueda
     for(i=0; i< strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
     }
