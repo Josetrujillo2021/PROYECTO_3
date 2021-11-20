@@ -171,7 +171,7 @@ void sensorMAX30105(void){
       //Se envian las muestras y los calculos al monitor
       
       c = Serial2.read();
-      cadena += c
+      cadena += c;
       if (c == '\n'){
         Serial.println(cadena);//ESTE ME IMPRIME LA CADENA COMPLETA
         cadena.toCharArray(str, 3); //SIEMPRE DEBE DE SER MAYOR AL NUMERO DE CARACTERES QUE ENVÍO
@@ -182,7 +182,7 @@ void sensorMAX30105(void){
           Serial.print(resultado);//ME VA MOSTRADO CADA UNO DE LOS DATOS DE RESULTADO
           resultado = strtok(NULL, delimitadores);//
         }
-        cadena = "",
+        cadena = "";
       }
       /*dato=Serial2.readStringUntil('\n');
       //Serial.println(dato);
