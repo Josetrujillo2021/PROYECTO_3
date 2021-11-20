@@ -8,6 +8,7 @@
 //Librerías
 //----------------------------------------------------------------------------------------------------------------------
 #include <Arduino.h>
+#include <Separador.h>
 #include <SPI.h> //se incluye la libreria de la comunicacion SPI para que gfunciona la comunicacion con la SD 
 #include <SD.h> //Se incluye la libreria de la SD 
 
@@ -79,6 +80,8 @@ int datoNum =0;
 
 //Dato sensor
 String dato=""; 
+String HR="";
+String SPO2="";
 String text1 = "HR=";
 String text2 = "SPO2=";
 String prueba1="";
@@ -86,6 +89,8 @@ String prueba1="";
 bool comunicacion = false; 
 bool subirDato = false; 
 File myFile;//este tipo de función me permite guardar datos en un archivo con ese nombre
+
+Separador s; 
 //----------------------------------------------------------------------------------------------------------------------
 //ISR  (interrupciones)
 //----------------------------------------------------------------------------------------------------------------------
@@ -131,7 +136,8 @@ void loop()
   
   LCD_Print(text1 ,130, 110, 1, 0x0000,   0xFFFF);
   LCD_Print(text2 ,200, 110, 1, 0x0000,   0xFFFF);
-  LCD_Print(dato ,140, 110, 1, 0x0000,   0xFFFF);
+  LCD_Print(HR ,140, 110, 1, 0x0000,   0xFFFF);
+  LCD_Print(SPO2 ,210, 110, 1, 0x0000,   0xFFFF);
 
   sensorHR();   
   guardarDatoSD(); 
@@ -150,7 +156,8 @@ void sensorHR(void){
       if(comunicacion){
         if (Serial4.available()>0){
           dato = Serial4.readStringUntil('\n');
-         
+          HR = s.separa(dato, ',', 0);
+          SPO2 = s.separa(dato, ',', 1);
         }
         Serial4.println(dato);
         comunicacion = false; 
@@ -193,11 +200,10 @@ void writeSD(void) {
     Serial.print(dato);//sobreescribe sobre el dato que guardo en el ultimo momento del sensor 
 
 
-    myFile.print(dato.toInt());
+    myFile.print(HR.toInt());
     myFile.println(",");
-
-
-
+    myFile.print(SPO2.toInt());
+    myFile.println(",");
     
     // cierra el doc:
     myFile.close();
