@@ -9,6 +9,7 @@
 //Librerías
 //----------------------------------------------------------------------------------------------------------------------
 #include <Arduino.h>
+#include <Separador.h>
 //librerías de NEOPIXEL
 #include <Adafruit_NeoPixel.h>
 
@@ -62,6 +63,8 @@ char *resultado = NULL;
 char str[100];
 String cadena;
 char c; 
+
+Separador s; 
 //----------------------------------------------------------------------------------------------------------------------
 //ISR  (interrupciones)
 //----------------------------------------------------------------------------------------------------------------------
@@ -170,7 +173,13 @@ void sensorMAX30105(void){
      if (Serial2.available()>0){
       //Se envian las muestras y los calculos al monitor
       
-      c = Serial2.read();
+      dato = Serial2.readStringUntil('\n');
+      HR = s.separa(dato, ',',0);
+      SPO2 = s.separa(dato,',',1);
+      Serial.println("Heart rate= "+HR);
+      Serial.println("Oximetría= "+SPO2);
+
+      /*c = Serial2.read();
       cadena += c;
       if (c == '\n'){
         Serial.println(cadena);//ESTE ME IMPRIME LA CADENA COMPLETA
@@ -183,7 +192,9 @@ void sensorMAX30105(void){
           resultado = strtok(NULL, delimitadores);//
         }
         cadena = "";
-      }
+      }*/
+
+
       /*dato=Serial2.readStringUntil('\n');
       //Serial.println(dato);
       HR = getValue(dato, ",", 0);
