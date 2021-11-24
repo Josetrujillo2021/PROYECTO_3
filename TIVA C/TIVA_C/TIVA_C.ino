@@ -154,8 +154,6 @@ void sensorHR(void){
     delay(10);
     if(digitalRead(Boton1)==1){
       if(comunicacion){
-        //Prueba
-        Serial4.println("150, 98");
         if (Serial4.available()>0){
           //Obtención de los dos datos
           dato = Serial4.readStringUntil('\n');
